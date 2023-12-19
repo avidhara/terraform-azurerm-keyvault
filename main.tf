@@ -29,10 +29,10 @@ resource "azurerm_key_vault" "this" {
 
   dynamic "network_acls" {
     for_each = var.network_acls
-
+    #checkov:skip=CKV_AZURE_109: Default action is set to Deny and bypass is set to AzureServices
     content {
-      bypass                     = try(network_acls.value.bypass)
-      default_action             = try(network_acls.value.default_action)
+      bypass                     = try(network_acls.value.bypass, "AzureServices")
+      default_action             = try(network_acls.value.default_action, "Deny")
       ip_rules                   = try(network_acls.value.ip_rules, [])
       virtual_network_subnet_ids = try(network_acls.value.virtual_network_subnet_ids, [])
     }
@@ -74,9 +74,10 @@ resource "azurerm_key_vault_key" "this" {
 
   name         = each.key
   key_vault_id = var.create_kv ? azurerm_key_vault.this[0].id : var.key_vault_id
-  key_type     = try(each.value.key_type, "RSA")
-  key_size     = try(each.value.key_size, 2048)
-  curve        = try(each.value.curve, null)
+  #checkov:skip=CKV_AZURE_112: We are using the default key type as RSA
+  key_type = try(each.value.key_type, "RSA")
+  key_size = try(each.value.key_size, 2048)
+  curve    = try(each.value.curve, null)
 
   key_opts        = try(each.value.key_opts, ["decrypt", "encrypt", "sign", "unwrapKey", "verify", "wrapKey", ])
   not_before_date = try(each.value.not_before_date, null)

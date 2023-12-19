@@ -1,4 +1,5 @@
-# Terraform module for Azure Key-Vault
+
+# Terraform module for Azure Key-Vault [![Static security analysis for Terraform](https://github.com/ionicloud/terraform-azurerm-keyvault/actions/workflows/checkov.yml/badge.svg)](https://github.com/ionicloud/terraform-azurerm-keyvault/actions/workflows/checkov.yml)
 
 ## How to use it as a module
 
